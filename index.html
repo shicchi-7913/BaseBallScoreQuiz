@@ -14,7 +14,7 @@
 
 <body>
   <h1>野球スコアブッククイズ</h1>
-  <canvas id="scoreCanvas" width="250" height="250"></canvas>
+  <canvas id="scoreCanvas" width="190" height="160"></canvas>
   <br>
   <button class="toggle-button" onclick="toggleText('space1')">スペース1 トグル</button>
   <button class="toggle-button" onclick="toggleText('space2')">スペース2 トグル</button>
@@ -44,36 +44,41 @@
     // 各スペースに文字を描画する関数
     function drawText() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // 背景を白で塗りつぶす
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // 再描画 - 枠線とサイド部分、十字線、ひし形
       ctx.setLineDash([]); // 点線設定を解除
       ctx.beginPath();
-      ctx.rect(20, 20, 190, 160);
+      ctx.rect(0, 0, 190, 160);
       ctx.stroke();
 
       // 縦線の描画
       ctx.beginPath();
-      ctx.moveTo(50, 20);
-      ctx.lineTo(50, 180);
+      ctx.moveTo(30, 0);
+      ctx.lineTo(30, 160);
       ctx.stroke();
 
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
-      ctx.moveTo(50, 100);
-      ctx.lineTo(90, 100);
-      ctx.moveTo(170, 100);
-      ctx.lineTo(210, 100);
-      ctx.moveTo(130, 20);
-      ctx.lineTo(130, 60);
-      ctx.moveTo(130, 140);
-      ctx.lineTo(130, 180);
+      ctx.moveTo(30, 80);
+      ctx.lineTo(70, 80);
+      ctx.moveTo(150, 80);
+      ctx.lineTo(190, 80);
+      ctx.moveTo(160, 80);
+      ctx.lineTo(190, 80);
+      ctx.moveTo(110, 0);
+      ctx.lineTo(110, 40);
+      ctx.moveTo(110, 120);
+      ctx.lineTo(110, 160);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.moveTo(130, 60);
-      ctx.lineTo(170, 100);
-      ctx.lineTo(130, 140);
-      ctx.lineTo(90, 100);
+      ctx.moveTo(110, 40);
+      ctx.lineTo(150, 80);
+      ctx.lineTo(110, 120);
+      ctx.lineTo(70, 80);
       ctx.closePath();
       ctx.stroke();
 
