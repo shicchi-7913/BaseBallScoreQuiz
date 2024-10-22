@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 
 import { SpaceText } from '@/types/SpaceText';
 
-export const ScoreBookBase = ({ spaceText }: { spaceText: SpaceText }) => {
+export const Cell = ({ spaceText }: { spaceText: SpaceText }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {

@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 
 import { SpaceText } from '@/types/SpaceText';
-import { ScoreBookBase } from '@/components/ScoreBook/base';
+import { Cell } from '@/components/ScoreBook/Cell';
 
 const Page = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -58,7 +58,7 @@ const Page = () => {
     <div>
       <h1>野球スコアブッククイズ</h1>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <ScoreBookBase spaceText={spaceText} />
+        <Cell spaceText={spaceText} />
       </div>
       <br />
       <button className="toggle-button bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" onClick={() => toggleText('space1')}>スペース1 トグル</button>
