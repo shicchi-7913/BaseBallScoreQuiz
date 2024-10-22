@@ -1,4 +1,4 @@
-type SpaceText = {
+export type SpaceText = {
   space1: boolean;
   space2: boolean;
   space3: boolean;
