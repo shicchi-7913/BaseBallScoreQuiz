@@ -1,6 +1,6 @@
 'use client'
 
-import { BallCount } from '@/types/BallCount'
+import { BallCount, AtBatResult } from '@/types/ScoreBook'
 import { CellSize } from '@/const/CanvasSizes'
 import { useRef, useState, useEffect } from 'react'
 
@@ -8,13 +8,24 @@ export const MergedCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [content, setContent] = useState({
     ballCount: [] as BallCount[],
+    atBatResult: null as AtBatResult,
   })
 
-  const handleButtonClick = (section: 'BallCount', value: BallCount) => {
+  const handleButtonClick = (
+    section: 'BallCount' | 'AtBatResult',
+    value: BallCount | AtBatResult
+  ) => {
     setContent((prev) => {
-      return {
-        ...prev,
-        ballCount: [...prev.ballCount, value as BallCount],
+      if (section === 'BallCount') {
+        return {
+          ...prev,
+          ballCount: [...prev.ballCount, value as BallCount],
+        }
+      } else {
+        return {
+          ...prev,
+          atBatResult: value as AtBatResult,
+        }
       }
     })
   }
@@ -69,6 +80,7 @@ export const MergedCanvas = () => {
 
     // --- ここから BallCount ---
     content.ballCount.forEach((ballCount, index) => {
+      ctx.font = '10px Arial'
       const baseXOffset = 10
       const baseYOffset = 10
       const height = 15
@@ -123,6 +135,35 @@ export const MergedCanvas = () => {
       }
     })
     // --- ここまで BallCount ---
+
+    // --- ここから 1打席ごとの結果（真ん中）---
+    ctx.font = '40px Arial'
+    ctx.fillStyle = 'black'
+    ctx.strokeStyle = 'black'
+    if (content.atBatResult === 'leftOnBase') {
+      ctx.fillText('ℓ', 102, 95)
+    } else if (content.atBatResult === 'oneOut') {
+      ctx.fillText('I', 104, 95)
+    } else if (content.atBatResult === 'twoOut') {
+      ctx.fillText('II', 98, 95)
+    } else if (content.atBatResult === 'threeOut') {
+      ctx.fillText('III', 93, 95)
+    } else if (content.atBatResult === 'scoreWithEarnedRun') {
+      ctx.beginPath()
+      ctx.arc(110, 80, 20, 0, Math.PI * 2)
+      ctx.fillStyle = 'red'
+      ctx.fill()
+      ctx.strokeStyle = 'red'
+      ctx.stroke()
+    } else if (content.atBatResult === 'score') {
+      ctx.beginPath()
+      ctx.arc(110, 80, 20, 0, Math.PI * 2)
+      ctx.strokeStyle = 'red'
+      ctx.stroke()
+    }
+    // score で red を指定したため black に戻す
+    ctx.strokeStyle = 'black'
+    // --- ここまで 1打席ごとの結果（真ん中）---
   }, [content])
 
   return (
@@ -134,44 +175,87 @@ export const MergedCanvas = () => {
         className="border-2 border-black"
       ></canvas>
 
-      <div className="mt-4 space-x-2">
-        <p className="ml-2">ボールカウント</p>
-        <button
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-          onClick={() => handleButtonClick('BallCount', 'calledStrike')}
-        >
-          見逃しストライク
-        </button>
-        <button
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-          onClick={() => handleButtonClick('BallCount', 'swingingStrike')}
-        >
-          空振りストライク
-        </button>
-        <button
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-          onClick={() => handleButtonClick('BallCount', 'ball')}
-        >
-          ボール
-        </button>
-        <button
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-          onClick={() => handleButtonClick('BallCount', 'foulBall')}
-        >
-          ファウル
-        </button>
-        <button
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-          onClick={() => handleButtonClick('BallCount', 'buntFoul')}
-        >
-          バントファウル
-        </button>
-        <button
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-          onClick={() => handleButtonClick('BallCount', 'buntMiss')}
-        >
-          バント空振り
-        </button>
+      <div className="mt-4">
+        <div className="mt-4 space-x-2">
+          <p className="ml-2">ボールカウント</p>
+          <button
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+            onClick={() => handleButtonClick('BallCount', 'calledStrike')}
+          >
+            見逃しストライク
+          </button>
+          <button
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+            onClick={() => handleButtonClick('BallCount', 'swingingStrike')}
+          >
+            空振りストライク
+          </button>
+          <button
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+            onClick={() => handleButtonClick('BallCount', 'ball')}
+          >
+            ボール
+          </button>
+          <button
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+            onClick={() => handleButtonClick('BallCount', 'foulBall')}
+          >
+            ファウル
+          </button>
+          <button
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+            onClick={() => handleButtonClick('BallCount', 'buntFoul')}
+          >
+            バントファウル
+          </button>
+          <button
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+            onClick={() => handleButtonClick('BallCount', 'buntMiss')}
+          >
+            バント空振り
+          </button>
+        </div>
+        <div className="mt-4 space-x-2">
+          <p className="ml-2">1打席ごとの結果（真ん中）</p>
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+            onClick={() => handleButtonClick('AtBatResult', 'leftOnBase')}
+          >
+            残塁
+          </button>
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+            onClick={() => handleButtonClick('AtBatResult', 'oneOut')}
+          >
+            ワンアウト
+          </button>
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+            onClick={() => handleButtonClick('AtBatResult', 'twoOut')}
+          >
+            ツーアウト
+          </button>
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+            onClick={() => handleButtonClick('AtBatResult', 'threeOut')}
+          >
+            スリーアウト
+          </button>
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+            onClick={() =>
+              handleButtonClick('AtBatResult', 'scoreWithEarnedRun')
+            }
+          >
+            得点（自責点あり）
+          </button>
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+            onClick={() => handleButtonClick('AtBatResult', 'score')}
+          >
+            得点（自責点なし）
+          </button>
+        </div>
       </div>
     </>
   )
