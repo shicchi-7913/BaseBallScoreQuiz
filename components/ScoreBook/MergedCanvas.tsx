@@ -67,9 +67,13 @@ export const MergedCanvas = () => {
     // --- ここまで スコアブックセル ---
 
     // --- ここから BallCount ---
-    content.ballCount.forEach((text, index) => {
-      ctx.font = '20px Arial'
-      ctx.fillText(text, 5, 20 + index * 20)
+    content.ballCount.forEach((_, index) => {
+      ctx.beginPath()
+      ctx.moveTo(10, 10 + index * 15)
+      ctx.lineTo(20, 20 + index * 15)
+      ctx.moveTo(20, 10 + index * 15)
+      ctx.lineTo(10, 20 + index * 15)
+      ctx.stroke()
     })
     // --- ここまで BallCount ---
   }, [content])
@@ -80,10 +84,10 @@ export const MergedCanvas = () => {
         ref={canvasRef}
         width={190}
         height={160}
-        className="border-2 border-black mb-4"
+        className="border-2 border-black"
       ></canvas>
 
-      <div className="mb-4 space-x-2">
+      <div className="mt-4 space-x-2">
         <button
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
           onClick={() => handleButtonClick('BallCount', 'x')}
