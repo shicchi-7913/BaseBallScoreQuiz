@@ -35,6 +35,15 @@ export const MergedCanvas = () => {
     setContent(initState)
   }
 
+  const saveCanvasAsImage = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const link = document.createElement('a')
+    link.href = canvas.toDataURL('image/png')
+    link.download = 'scorebook.png'
+    link.click()
+  }
+
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -265,6 +274,12 @@ export const MergedCanvas = () => {
           </button>
         </div>
         <div className="mt-4">
+          <button
+            className="mr-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+            onClick={saveCanvasAsImage}
+          >
+            保存
+          </button>
           <button
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
             onClick={() => resetScore()}
