@@ -195,6 +195,9 @@ export const MergedCanvas = () => {
     } else if (content.totalBases === 'doubleHit') {
     }
     // --- ここまで 塁打 ---
+
+    // 塁打 で red を指定したため black に戻す
+    ctx.strokeStyle = 'black'
   }, [content])
 
   return (
