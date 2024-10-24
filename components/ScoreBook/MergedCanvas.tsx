@@ -1,19 +1,20 @@
 'use client'
 
+import { BallCount } from '@/types/BallCount'
 import { CellSize } from '@/const/CanvasSizes'
 import { useRef, useState, useEffect } from 'react'
 
 export const MergedCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [content, setContent] = useState({
-    ballCount: [] as string[],
+    ballCount: [] as BallCount[],
   })
 
-  const handleButtonClick = (section: 'BallCount', value: string) => {
+  const handleButtonClick = (section: 'BallCount', value: BallCount) => {
     setContent((prev) => {
       return {
         ...prev,
-        ballCount: [...prev.ballCount, value as string],
+        ballCount: [...prev.ballCount, value as BallCount],
       }
     })
   }
@@ -67,13 +68,59 @@ export const MergedCanvas = () => {
     // --- ここまで スコアブックセル ---
 
     // --- ここから BallCount ---
-    content.ballCount.forEach((_, index) => {
-      ctx.beginPath()
-      ctx.moveTo(10, 10 + index * 15)
-      ctx.lineTo(20, 20 + index * 15)
-      ctx.moveTo(20, 10 + index * 15)
-      ctx.lineTo(10, 20 + index * 15)
-      ctx.stroke()
+    content.ballCount.forEach((ballCount, index) => {
+      const baseXOffset = 10
+      const baseYOffset = 10
+      const height = 15
+      if (ballCount === 'calledStrike') {
+        ctx.beginPath()
+        ctx.moveTo(10, 10 + index * height)
+        ctx.lineTo(20, 20 + index * height)
+        ctx.moveTo(20, 10 + index * height)
+        ctx.lineTo(10, 20 + index * height)
+        ctx.stroke()
+      } else if (ballCount === 'swingingStrike') {
+        ctx.beginPath()
+        ctx.moveTo(10, 10 + index * height)
+        ctx.lineTo(20, 20 + index * height)
+        ctx.moveTo(16, 10 + index * height)
+        ctx.lineTo(10, 19 + index * height)
+        ctx.moveTo(20, 10 + index * height)
+        ctx.lineTo(13, 20 + index * height)
+        ctx.stroke()
+      } else if (ballCount === 'ball') {
+        ctx.fillText('・', baseXOffset, baseYOffset + 10 + index * height)
+      } else if (ballCount === 'foulBall') {
+        ctx.beginPath()
+        ctx.moveTo(baseXOffset + 5, baseYOffset + index * height)
+        ctx.lineTo(baseXOffset - 3, baseYOffset + 10 + index * height)
+        ctx.lineTo(baseXOffset + 13, baseYOffset + 10 + index * height)
+        ctx.lineTo(baseXOffset + 5, baseYOffset + index * height)
+        ctx.stroke()
+      } else if (ballCount === 'buntFoul') {
+        ctx.beginPath()
+        ctx.fillText('・', baseXOffset, baseYOffset + 10 + index * height)
+        ctx.moveTo(baseXOffset + 5, baseYOffset + index * height)
+        ctx.lineTo(baseXOffset - 3, baseYOffset + 10 + index * height)
+        ctx.lineTo(baseXOffset + 13, baseYOffset + 10 + index * height)
+        ctx.lineTo(baseXOffset + 5, baseYOffset + index * height)
+        ctx.stroke()
+      } else {
+        ctx.beginPath()
+        // 左から右へ
+        ctx.moveTo(10, 10 + index * height)
+        ctx.lineTo(17, 20 + index * height)
+        // 左から右へ②
+        ctx.moveTo(13, 10 + index * height)
+        ctx.lineTo(20, 20 + index * height)
+        // 右から左へ
+        ctx.moveTo(17, 10 + index * height)
+        ctx.lineTo(10, 20 + index * height)
+        // 右から左へ②
+        ctx.moveTo(20, 10 + index * height)
+        ctx.lineTo(13, 20 + index * height)
+        ctx.stroke()
+      }
     })
     // --- ここまで BallCount ---
   }, [content])
@@ -88,11 +135,42 @@ export const MergedCanvas = () => {
       ></canvas>
 
       <div className="mt-4 space-x-2">
+        <p className="ml-2">ボールカウント</p>
         <button
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-          onClick={() => handleButtonClick('BallCount', 'x')}
+          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+          onClick={() => handleButtonClick('BallCount', 'calledStrike')}
         >
-          ストライク
+          見逃しストライク
+        </button>
+        <button
+          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+          onClick={() => handleButtonClick('BallCount', 'swingingStrike')}
+        >
+          空振りストライク
+        </button>
+        <button
+          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+          onClick={() => handleButtonClick('BallCount', 'ball')}
+        >
+          ボール
+        </button>
+        <button
+          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+          onClick={() => handleButtonClick('BallCount', 'foulBall')}
+        >
+          ファウル
+        </button>
+        <button
+          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+          onClick={() => handleButtonClick('BallCount', 'buntFoul')}
+        >
+          バントファウル
+        </button>
+        <button
+          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+          onClick={() => handleButtonClick('BallCount', 'buntMiss')}
+        >
+          バント空振り
         </button>
       </div>
     </>
