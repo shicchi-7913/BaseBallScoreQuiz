@@ -1,6 +1,11 @@
 'use client'
 
-import { BallCount, AtBatResult, TotalBases } from '@/types/ScoreBook'
+import {
+  BallCount,
+  AtBatResult,
+  TotalBases,
+  InputType,
+} from '@/types/ScoreBook'
 import { CellSize } from '@/const/CanvasSizes'
 import { useRef, useState, useEffect } from 'react'
 
@@ -14,7 +19,7 @@ export const MergedCanvas = () => {
   const [content, setContent] = useState(initState)
 
   const handleButtonClick = (
-    section: 'BallCount' | 'AtBatResult' | 'TotalBases',
+    section: InputType,
     value: BallCount | AtBatResult | TotalBases
   ) => {
     setContent((prev) => {
@@ -182,6 +187,7 @@ export const MergedCanvas = () => {
       ctx.stroke()
     }
     // score で red を指定したため black に戻す
+    ctx.fillStyle = 'black'
     ctx.strokeStyle = 'black'
     // --- ここまで 1打席ごとの結果（真ん中）---
 
@@ -193,6 +199,35 @@ export const MergedCanvas = () => {
       ctx.lineTo(190, 80)
       ctx.stroke()
     } else if (content.totalBases === 'doubleHit') {
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.moveTo(80, 190)
+      ctx.lineTo(190, 80)
+      ctx.moveTo(190, 80)
+      ctx.lineTo(110, 0)
+      ctx.stroke()
+    } else if (content.totalBases === 'tripleHit') {
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.moveTo(80, 190)
+      ctx.lineTo(190, 80)
+      ctx.moveTo(190, 80)
+      ctx.lineTo(110, 0)
+      ctx.moveTo(110, 0)
+      ctx.lineTo(30, 80)
+      ctx.stroke()
+    } else if (content.totalBases === 'homerun') {
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.moveTo(80, 190)
+      ctx.lineTo(190, 80)
+      ctx.moveTo(190, 80)
+      ctx.lineTo(110, 0)
+      ctx.moveTo(110, 0)
+      ctx.lineTo(30, 80)
+      ctx.moveTo(30, 80)
+      ctx.lineTo(140, 190)
+      ctx.stroke()
     }
     // --- ここまで 塁打 ---
 
@@ -293,10 +328,28 @@ export const MergedCanvas = () => {
         <div className="mt-4">
           <p>塁打</p>
           <button
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
             onClick={() => handleButtonClick('TotalBases', 'oneHit')}
           >
             一塁打
+          </button>
+          <button
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'doubleHit')}
+          >
+            二塁打
+          </button>
+          <button
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'tripleHit')}
+          >
+            三塁打
+          </button>
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'homerun')}
+          >
+            本塁打
           </button>
         </div>
         <div className="mt-4">
@@ -307,7 +360,7 @@ export const MergedCanvas = () => {
             保存
           </button>
           <button
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
             onClick={() => resetScore()}
           >
             リセット
