@@ -1,6 +1,6 @@
 'use client'
 
-import { BallCount, AtBatResult } from '@/types/ScoreBook'
+import { BallCount, AtBatResult, TotalBases } from '@/types/ScoreBook'
 import { CellSize } from '@/const/CanvasSizes'
 import { useRef, useState, useEffect } from 'react'
 
@@ -8,13 +8,14 @@ export const MergedCanvas = () => {
   const initState = {
     ballCount: [] as BallCount[],
     atBatResult: null as AtBatResult,
+    totalBases: null as TotalBases,
   }
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [content, setContent] = useState(initState)
 
   const handleButtonClick = (
-    section: 'BallCount' | 'AtBatResult',
-    value: BallCount | AtBatResult
+    section: 'BallCount' | 'AtBatResult' | 'TotalBases',
+    value: BallCount | AtBatResult | TotalBases
   ) => {
     setContent((prev) => {
       if (section === 'BallCount') {
@@ -22,10 +23,15 @@ export const MergedCanvas = () => {
           ...prev,
           ballCount: [...prev.ballCount, value as BallCount],
         }
-      } else {
+      } else if (section === 'AtBatResult') {
         return {
           ...prev,
           atBatResult: value as AtBatResult,
+        }
+      } else {
+        return {
+          ...prev,
+          totalBases: value as TotalBases,
         }
       }
     })
@@ -179,8 +185,16 @@ export const MergedCanvas = () => {
     ctx.strokeStyle = 'black'
     // --- ここまで 1打席ごとの結果（真ん中）---
 
-    // --- ここから ---
-    // --- ここまで ---
+    // --- ここから 塁打 ---
+    if (content.totalBases === 'oneHit') {
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.moveTo(80, 190)
+      ctx.lineTo(190, 80)
+      ctx.stroke()
+    } else if (content.totalBases === 'doubleHit') {
+    }
+    // --- ここまで 塁打 ---
   }, [content])
 
   return (
@@ -271,6 +285,15 @@ export const MergedCanvas = () => {
             onClick={() => handleButtonClick('AtBatResult', 'score')}
           >
             得点（自責点なし）
+          </button>
+        </div>
+        <div className="mt-4">
+          <p>塁打</p>
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'oneHit')}
+          >
+            一塁打
           </button>
         </div>
         <div className="mt-4">
