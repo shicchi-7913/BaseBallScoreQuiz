@@ -253,6 +253,19 @@ export const MergedCanvas = () => {
       ctx.fillText('BH', 0, 0)
 
       ctx.restore() // 状態を復元
+    } else if (content.totalBases === 'infieldHit') {
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.moveTo(80, 190)
+      ctx.lineTo(190, 80)
+      ctx.stroke()
+
+      const radius = 38
+
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.arc(150, 120, radius, Math.PI / -4, Math.PI + Math.PI / -4)
+      ctx.stroke()
     }
     // --- ここまで 塁打 ---
 
