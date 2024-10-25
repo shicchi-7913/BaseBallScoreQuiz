@@ -15,6 +15,13 @@ export type AtBatResult =
   | 'score'
   | null
 
-export type TotalBases = 'oneHit' | 'doubleHit' | 'tripleHit' | 'homerun' | null
+export type TotalBases =
+  | 'oneHit'
+  | 'doubleHit'
+  | 'tripleHit'
+  | 'homerun'
+  | 'buntHit'
+  | 'infieldHit'
+  | null
 
 export type InputType = 'BallCount' | 'AtBatResult' | 'TotalBases'

@@ -228,10 +228,36 @@ export const MergedCanvas = () => {
       ctx.moveTo(30, 80)
       ctx.lineTo(140, 190)
       ctx.stroke()
+    } else if (content.totalBases === 'buntHit') {
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.moveTo(80, 190)
+      ctx.lineTo(190, 80)
+      ctx.stroke()
+
+      const radius = 38
+
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.arc(150, 120, radius, Math.PI / -4, Math.PI + Math.PI / -4)
+      ctx.stroke()
+
+      ctx.save() // ここまでの状態を保存
+
+      ctx.translate(135, 125)
+      ctx.rotate(-Math.PI / 4)
+
+      // 傾けた状態で文字を描画
+      ctx.fillStyle = 'red'
+      ctx.font = '20px Arial'
+      ctx.fillText('BH', 0, 0)
+
+      ctx.restore() // 状態を復元
     }
     // --- ここまで 塁打 ---
 
     // 塁打 で red を指定したため black に戻す
+    ctx.fillStyle = 'black'
     ctx.strokeStyle = 'black'
   }, [content])
 
@@ -346,10 +372,22 @@ export const MergedCanvas = () => {
             三塁打
           </button>
           <button
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
             onClick={() => handleButtonClick('TotalBases', 'homerun')}
           >
             本塁打
+          </button>
+          <button
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'buntHit')}
+          >
+            バントヒット
+          </button>
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+          >
+            内野安打
           </button>
         </div>
         <div className="mt-4">
