@@ -6,8 +6,11 @@ import {
   TotalBases,
   InputType,
 } from '@/types/ScoreBook'
-import { CellSize } from '@/const/CanvasSizes'
 import { useRef, useState, useEffect } from 'react'
+import { drawScoreBookCell } from '@/components/ScoreBook/functions/ScoreBookCell'
+import { drawBallCount } from '@/components/ScoreBook/functions/BallCount'
+import { drawTotalBases } from '@/components/ScoreBook/functions/TotalBases'
+import { drawAtBatResult } from '@/components/ScoreBook/functions/AtBatResult'
 
 export const MergedCanvas = () => {
   const initState = {
@@ -42,6 +45,11 @@ export const MergedCanvas = () => {
     })
   }
 
+  const resetColor = (ctx: CanvasRenderingContext2D) => {
+    ctx.fillStyle = 'black'
+    ctx.strokeStyle = 'black'
+  }
+
   const resetScore = () => {
     setContent(initState)
   }
@@ -63,215 +71,19 @@ export const MergedCanvas = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // --- ここから スコアブックセル ---
-    // 枠の設定
-    ctx.beginPath()
-    ctx.rect(0, 0, CellSize.width, CellSize.height)
-    ctx.stroke()
-
-    // 縦線の描画
-    ctx.beginPath()
-    ctx.moveTo(30, 0)
-    ctx.lineTo(30, 160)
-    ctx.stroke()
-
-    // 横線の描画
-    ctx.setLineDash([3, 3])
-    ctx.beginPath()
-    ctx.moveTo(30, 80)
-    ctx.lineTo(70, 80)
-    ctx.moveTo(150, 80)
-    ctx.lineTo(190, 80)
-    ctx.moveTo(160, 80)
-    ctx.lineTo(190, 80)
-    ctx.moveTo(110, 0)
-    ctx.lineTo(110, 40)
-    ctx.moveTo(110, 120)
-    ctx.lineTo(110, 160)
-    ctx.stroke()
-
-    // ひし形の描画
-    ctx.beginPath()
-    ctx.moveTo(110, 40)
-    ctx.lineTo(150, 80)
-    ctx.lineTo(110, 120)
-    ctx.lineTo(70, 80)
-    ctx.closePath()
-    ctx.stroke()
-
-    // 枠の点線を解除する
-    ctx.setLineDash([])
-    // --- ここまで スコアブックセル ---
-
-    // --- ここから BallCount ---
-    content.ballCount.forEach((ballCount, index) => {
-      ctx.font = '10px Arial'
-      const baseXOffset = 10
-      const baseYOffset = 10
-      const height = 15
-      if (ballCount === 'calledStrike') {
-        ctx.beginPath()
-        ctx.moveTo(10, 10 + index * height)
-        ctx.lineTo(20, 20 + index * height)
-        ctx.moveTo(20, 10 + index * height)
-        ctx.lineTo(10, 20 + index * height)
-        ctx.stroke()
-      } else if (ballCount === 'swingingStrike') {
-        ctx.beginPath()
-        ctx.moveTo(10, 10 + index * height)
-        ctx.lineTo(20, 20 + index * height)
-        ctx.moveTo(16, 10 + index * height)
-        ctx.lineTo(10, 19 + index * height)
-        ctx.moveTo(20, 10 + index * height)
-        ctx.lineTo(13, 20 + index * height)
-        ctx.stroke()
-      } else if (ballCount === 'ball') {
-        ctx.fillText('・', baseXOffset, baseYOffset + 10 + index * height)
-      } else if (ballCount === 'foulBall') {
-        ctx.beginPath()
-        ctx.moveTo(baseXOffset + 5, baseYOffset + index * height)
-        ctx.lineTo(baseXOffset - 3, baseYOffset + 10 + index * height)
-        ctx.lineTo(baseXOffset + 13, baseYOffset + 10 + index * height)
-        ctx.lineTo(baseXOffset + 5, baseYOffset + index * height)
-        ctx.stroke()
-      } else if (ballCount === 'buntFoul') {
-        ctx.beginPath()
-        ctx.fillText('・', baseXOffset, baseYOffset + 10 + index * height)
-        ctx.moveTo(baseXOffset + 5, baseYOffset + index * height)
-        ctx.lineTo(baseXOffset - 3, baseYOffset + 10 + index * height)
-        ctx.lineTo(baseXOffset + 13, baseYOffset + 10 + index * height)
-        ctx.lineTo(baseXOffset + 5, baseYOffset + index * height)
-        ctx.stroke()
-      } else {
-        ctx.beginPath()
-        // 左から右へ
-        ctx.moveTo(10, 10 + index * height)
-        ctx.lineTo(17, 20 + index * height)
-        // 左から右へ②
-        ctx.moveTo(13, 10 + index * height)
-        ctx.lineTo(20, 20 + index * height)
-        // 右から左へ
-        ctx.moveTo(17, 10 + index * height)
-        ctx.lineTo(10, 20 + index * height)
-        // 右から左へ②
-        ctx.moveTo(20, 10 + index * height)
-        ctx.lineTo(13, 20 + index * height)
-        ctx.stroke()
-      }
-    })
-    // --- ここまで BallCount ---
-
-    // --- ここから 1打席ごとの結果（真ん中）---
-    ctx.font = '40px Arial'
-    ctx.fillStyle = 'black'
-    ctx.strokeStyle = 'black'
-    if (content.atBatResult === 'leftOnBase') {
-      ctx.fillText('ℓ', 102, 95)
-    } else if (content.atBatResult === 'oneOut') {
-      ctx.fillText('I', 104, 95)
-    } else if (content.atBatResult === 'twoOut') {
-      ctx.fillText('II', 98, 95)
-    } else if (content.atBatResult === 'threeOut') {
-      ctx.fillText('III', 93, 95)
-    } else if (content.atBatResult === 'scoreWithEarnedRun') {
-      ctx.beginPath()
-      ctx.arc(110, 80, 20, 0, Math.PI * 2)
-      ctx.fillStyle = 'red'
-      ctx.fill()
-      ctx.strokeStyle = 'red'
-      ctx.stroke()
-    } else if (content.atBatResult === 'score') {
-      ctx.beginPath()
-      ctx.arc(110, 80, 20, 0, Math.PI * 2)
-      ctx.strokeStyle = 'red'
-      ctx.stroke()
-    }
+    // --- スコアブックセル ---
+    drawScoreBookCell(ctx)
+    // --- BallCount ---
+    drawBallCount(ctx, content.ballCount)
+    // --- 1打席ごとの結果（真ん中）---
+    resetColor(ctx)
+    drawAtBatResult(ctx, content.atBatResult)
     // score で red を指定したため black に戻す
-    ctx.fillStyle = 'black'
-    ctx.strokeStyle = 'black'
-    // --- ここまで 1打席ごとの結果（真ん中）---
-
-    // --- ここから 塁打 ---
-    if (content.totalBases === 'oneHit') {
-      ctx.beginPath()
-      ctx.strokeStyle = 'red'
-      ctx.moveTo(80, 190)
-      ctx.lineTo(190, 80)
-      ctx.stroke()
-    } else if (content.totalBases === 'doubleHit') {
-      ctx.beginPath()
-      ctx.strokeStyle = 'red'
-      ctx.moveTo(80, 190)
-      ctx.lineTo(190, 80)
-      ctx.moveTo(190, 80)
-      ctx.lineTo(110, 0)
-      ctx.stroke()
-    } else if (content.totalBases === 'tripleHit') {
-      ctx.beginPath()
-      ctx.strokeStyle = 'red'
-      ctx.moveTo(80, 190)
-      ctx.lineTo(190, 80)
-      ctx.moveTo(190, 80)
-      ctx.lineTo(110, 0)
-      ctx.moveTo(110, 0)
-      ctx.lineTo(30, 80)
-      ctx.stroke()
-    } else if (content.totalBases === 'homerun') {
-      ctx.beginPath()
-      ctx.strokeStyle = 'red'
-      ctx.moveTo(80, 190)
-      ctx.lineTo(190, 80)
-      ctx.moveTo(190, 80)
-      ctx.lineTo(110, 0)
-      ctx.moveTo(110, 0)
-      ctx.lineTo(30, 80)
-      ctx.moveTo(30, 80)
-      ctx.lineTo(140, 190)
-      ctx.stroke()
-    } else if (content.totalBases === 'buntHit') {
-      ctx.beginPath()
-      ctx.strokeStyle = 'red'
-      ctx.moveTo(80, 190)
-      ctx.lineTo(190, 80)
-      ctx.stroke()
-
-      const radius = 38
-
-      ctx.beginPath()
-      ctx.strokeStyle = 'red'
-      ctx.arc(150, 120, radius, Math.PI / -4, Math.PI + Math.PI / -4)
-      ctx.stroke()
-
-      ctx.save() // ここまでの状態を保存
-
-      ctx.translate(135, 125)
-      ctx.rotate(-Math.PI / 4)
-
-      // 傾けた状態で文字を描画
-      ctx.fillStyle = 'red'
-      ctx.font = '20px Arial'
-      ctx.fillText('BH', 0, 0)
-
-      ctx.restore() // 状態を復元
-    } else if (content.totalBases === 'infieldHit') {
-      ctx.beginPath()
-      ctx.strokeStyle = 'red'
-      ctx.moveTo(80, 190)
-      ctx.lineTo(190, 80)
-      ctx.stroke()
-
-      const radius = 38
-
-      ctx.beginPath()
-      ctx.strokeStyle = 'red'
-      ctx.arc(150, 120, radius, Math.PI / -4, Math.PI + Math.PI / -4)
-      ctx.stroke()
-    }
-    // --- ここまで 塁打 ---
-
+    resetColor(ctx)
+    // --- 塁打 ---
+    drawTotalBases(ctx, content.totalBases)
     // 塁打 で red を指定したため black に戻す
-    ctx.fillStyle = 'black'
-    ctx.strokeStyle = 'black'
+    resetColor(ctx)
   }, [content])
 
   return (
