@@ -5,25 +5,31 @@ import {
   AtBatResult,
   TotalBases,
   InputType,
+  HitInFirst,
+  Position,
 } from '@/types/ScoreBook'
 import { useRef, useState, useEffect } from 'react'
 import { drawScoreBookCell } from '@/components/ScoreBook/functions/ScoreBookCell'
 import { drawBallCount } from '@/components/ScoreBook/functions/BallCount'
 import { drawTotalBases } from '@/components/ScoreBook/functions/TotalBases'
 import { drawAtBatResult } from '@/components/ScoreBook/functions/AtBatResult'
+import { drawHitInFirst } from '@/components/ScoreBook/functions/HitInFirst'
 
 export const MergedCanvas = () => {
   const initState = {
     ballCount: [] as BallCount[],
     atBatResult: null as AtBatResult,
     totalBases: null as TotalBases,
+    first: {
+      position: null as Position,
+    } as HitInFirst,
   }
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [content, setContent] = useState(initState)
 
   const handleButtonClick = (
     section: InputType,
-    value: BallCount | AtBatResult | TotalBases
+    value: BallCount | AtBatResult | TotalBases | Position
   ) => {
     setContent((prev) => {
       if (section === 'BallCount') {
@@ -36,10 +42,17 @@ export const MergedCanvas = () => {
           ...prev,
           atBatResult: value as AtBatResult,
         }
-      } else {
+      } else if (section === 'TotalBases') {
         return {
           ...prev,
           totalBases: value as TotalBases,
+        }
+      } else {
+        return {
+          ...prev,
+          first: {
+            position: value as Position,
+          } as HitInFirst,
         }
       }
     })
@@ -85,6 +98,8 @@ export const MergedCanvas = () => {
     // 塁打 で red を指定したため black に戻す
     resetColor(ctx)
     // hitInFirst
+    drawHitInFirst(ctx, content.first)
+    resetColor(ctx)
   }, [content])
 
   return (
@@ -221,7 +236,9 @@ export const MergedCanvas = () => {
             <button
               key={i}
               className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-              onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+              onClick={() =>
+                handleButtonClick('HitInFirst', (i + 1).toString() as Position)
+              }
             >
               {i + 1}
             </button>
@@ -230,25 +247,25 @@ export const MergedCanvas = () => {
         <div className="mt-4">
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+            onClick={() => handleButtonClick('HitInFirst', 'infieldHit')}
           >
             ゴロ
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+            onClick={() => handleButtonClick('HitInFirst', 'infieldHit')}
           >
             オーバー
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+            onClick={() => handleButtonClick('HitInFirst', 'infieldHit')}
           >
             左
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+            onClick={() => handleButtonClick('HitInFirst', 'infieldHit')}
           >
             右
           </button>

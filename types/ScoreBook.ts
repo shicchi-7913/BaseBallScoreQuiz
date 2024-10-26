@@ -24,4 +24,22 @@ export type TotalBases =
   | 'infieldHit'
   | null
 
-export type InputType = 'BallCount' | 'AtBatResult' | 'TotalBases'
+export type Position =
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | null
+
+export type HitInFirst = { position: Position }
+
+export type InputType =
+  | 'BallCount'
+  | 'AtBatResult'
+  | 'TotalBases'
+  | 'HitInFirst'
