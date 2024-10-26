@@ -36,7 +36,15 @@ export type Position =
   | '9'
   | null
 
-export type HitInFirst = { position: Position }
+export type Field =
+  | 'leftOfCenter'
+  | 'rightOfCenter'
+  | 'over'
+  | 'front'
+  | 'fly'
+  | null
+
+export type HitInFirst = { position: Position; field: Field }
 
 export type InputType =
   | 'BallCount'

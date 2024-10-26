@@ -7,13 +7,17 @@ import {
   InputType,
   HitInFirst,
   Position,
+  Field,
 } from '@/types/ScoreBook'
 import { useRef, useState, useEffect } from 'react'
 import { drawScoreBookCell } from '@/components/ScoreBook/functions/ScoreBookCell'
 import { drawBallCount } from '@/components/ScoreBook/functions/BallCount'
 import { drawTotalBases } from '@/components/ScoreBook/functions/TotalBases'
 import { drawAtBatResult } from '@/components/ScoreBook/functions/AtBatResult'
-import { drawHitInFirst } from '@/components/ScoreBook/functions/HitInFirst'
+import {
+  drawHitInFirst,
+  isIncludedPosition,
+} from '@/components/ScoreBook/functions/HitInFirst'
 
 export const MergedCanvas = () => {
   const initState = {
@@ -22,6 +26,7 @@ export const MergedCanvas = () => {
     totalBases: null as TotalBases,
     first: {
       position: null as Position,
+      field: null as Field,
     } as HitInFirst,
   }
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -29,7 +34,7 @@ export const MergedCanvas = () => {
 
   const handleButtonClick = (
     section: InputType,
-    value: BallCount | AtBatResult | TotalBases | Position
+    value: BallCount | AtBatResult | TotalBases | Position | Field
   ) => {
     setContent((prev) => {
       if (section === 'BallCount') {
@@ -48,11 +53,22 @@ export const MergedCanvas = () => {
           totalBases: value as TotalBases,
         }
       } else {
-        return {
-          ...prev,
-          first: {
-            position: value as Position,
-          } as HitInFirst,
+        if (isIncludedPosition(value as string)) {
+          return {
+            ...prev,
+            first: {
+              ...prev.first,
+              position: value as Position,
+            },
+          }
+        } else {
+          return {
+            ...prev,
+            first: {
+              ...prev.first,
+              field: value as Field,
+            },
+          }
         }
       }
     })
@@ -247,27 +263,33 @@ export const MergedCanvas = () => {
         <div className="mt-4">
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'infieldHit')}
+            onClick={() => handleButtonClick('HitInFirst', 'front')}
           >
-            ゴロ
+            前
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'infieldHit')}
+            onClick={() => handleButtonClick('HitInFirst', 'over')}
           >
             オーバー
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'infieldHit')}
+            onClick={() => handleButtonClick('HitInFirst', 'fly')}
           >
-            左
+            オーバー（フライ）
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'infieldHit')}
+            onClick={() => handleButtonClick('HitInFirst', 'leftOfCenter')}
           >
-            右
+            左中間
+          </button>
+          <button
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('HitInFirst', 'rightOfCenter')}
+          >
+            右中間
           </button>
         </div>
         <div className="mt-4">一塁凡退</div>
