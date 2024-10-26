@@ -84,6 +84,7 @@ export const MergedCanvas = () => {
     drawTotalBases(ctx, content.totalBases)
     // 塁打 で red を指定したため black に戻す
     resetColor(ctx)
+    // hitInFirst
   }, [content])
 
   return (
@@ -177,7 +178,7 @@ export const MergedCanvas = () => {
           </button>
         </div>
         <div className="mt-4">
-          <p>塁打</p>
+          <p>安打</p>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
             onClick={() => handleButtonClick('TotalBases', 'oneHit')}
@@ -215,6 +216,44 @@ export const MergedCanvas = () => {
             内野安打
           </button>
         </div>
+        <div className="mt-4">
+          {Array.from({ length: 9 }, (_, i) => (
+            <button
+              key={i}
+              className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+              onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+        <div className="mt-4">
+          <button
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+          >
+            ゴロ
+          </button>
+          <button
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+          >
+            オーバー
+          </button>
+          <button
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+          >
+            左
+          </button>
+          <button
+            className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+          >
+            右
+          </button>
+        </div>
+        <div className="mt-4">一塁凡退</div>
         <div className="mt-4">
           <button
             className="mr-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
