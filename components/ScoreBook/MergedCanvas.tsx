@@ -53,33 +53,33 @@ export const MergedCanvas = () => {
     }))
   }
 
+  const handleTotalBasesClick = (value: TotalBases) => {
+    setContent((prev) => ({
+      ...prev,
+      totalBases: value,
+    }))
+  }
+
   const handleButtonClick = (
     section: InputType,
     value: BallCount | AtBatResult | TotalBases | Position | Field
   ) => {
     setContent((prev) => {
-      if (section === 'TotalBases') {
+      if (isIncludedPosition(value as string)) {
         return {
           ...prev,
-          totalBases: value as TotalBases,
+          first: {
+            ...prev.first,
+            position: value as Position,
+          },
         }
       } else {
-        if (isIncludedPosition(value as string)) {
-          return {
-            ...prev,
-            first: {
-              ...prev.first,
-              position: value as Position,
-            },
-          }
-        } else {
-          return {
-            ...prev,
-            first: {
-              ...prev.first,
-              field: value as Field,
-            },
-          }
+        return {
+          ...prev,
+          first: {
+            ...prev.first,
+            field: value as Field,
+          },
         }
       }
     })
@@ -223,37 +223,37 @@ export const MergedCanvas = () => {
           <p>安打</p>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'oneHit')}
+            onClick={() => handleTotalBasesClick('oneHit')}
           >
             一塁打
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'doubleHit')}
+            onClick={() => handleTotalBasesClick('doubleHit')}
           >
             二塁打
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'tripleHit')}
+            onClick={() => handleTotalBasesClick('tripleHit')}
           >
             三塁打
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'homerun')}
+            onClick={() => handleTotalBasesClick('homerun')}
           >
             本塁打
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'buntHit')}
+            onClick={() => handleTotalBasesClick('buntHit')}
           >
             バントヒット
           </button>
           <button
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('TotalBases', 'infieldHit')}
+            onClick={() => handleTotalBasesClick('infieldHit')}
           >
             内野安打
           </button>
