@@ -51,3 +51,10 @@ export type InputType =
   | 'AtBatResult'
   | 'TotalBases'
   | 'HitInFirst'
+  | 'PoorInFirst'
+
+export type PoorInFirst = {
+  to: Position
+  from: Position
+  field: Field
+}

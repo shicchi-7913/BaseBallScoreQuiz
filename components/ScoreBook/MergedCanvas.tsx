@@ -8,6 +8,7 @@ import {
   HitInFirst,
   Position,
   Field,
+  PoorInFirst,
 } from '@/types/ScoreBook'
 import { useRef, useState, useEffect } from 'react'
 import { drawScoreBookCell } from '@/components/ScoreBook/functions/ScoreBookCell'
@@ -18,6 +19,7 @@ import {
   drawHitInFirst,
   isIncludedPosition,
 } from '@/components/ScoreBook/functions/HitInFirst'
+import { drawPoorInFirst } from '@/components/ScoreBook/functions/PoorInFirst'
 
 export const MergedCanvas = () => {
   const initState = {
@@ -28,6 +30,11 @@ export const MergedCanvas = () => {
       position: null as Position,
       field: null as Field,
     } as HitInFirst,
+    poorInFirst: {
+      to: null,
+      from: null,
+      field: null as Field,
+    } as PoorInFirst,
   }
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [content, setContent] = useState(initState)
@@ -116,6 +123,8 @@ export const MergedCanvas = () => {
     // hitInFirst
     drawHitInFirst(ctx, content.first)
     resetColor(ctx)
+    // poorInFirst
+    drawPoorInFirst(ctx, content.poorInFirst)
   }, [content])
 
   return (
@@ -292,7 +301,20 @@ export const MergedCanvas = () => {
             右中間
           </button>
         </div>
-        <div className="mt-4">一塁凡退</div>
+        <div className="mt-4">
+          <p>一塁凡退</p>
+          {Array.from({ length: 9 }, (_, i) => (
+            <button
+              key={i}
+              className="mr-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+              onClick={() =>
+                handleButtonClick('PoorInFirst', (i + 1).toString() as Position)
+              }
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
         <div className="mt-4">
           <button
             className="mr-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
