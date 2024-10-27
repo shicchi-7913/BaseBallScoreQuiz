@@ -68,7 +68,7 @@ export const MergedCanvas = () => {
       ...prev,
       first: {
         ...prev.first,
-        position: value as Position,
+        position: value,
       },
     }))
   }
@@ -78,7 +78,17 @@ export const MergedCanvas = () => {
       ...prev,
       first: {
         ...prev.first,
-        field: value as Field,
+        field: value,
+      },
+    }))
+  }
+
+  const handlePoorFromPositionClick = (from: Position) => {
+    setContent((prev) => ({
+      ...prev,
+      poorInFirst: {
+        ...prev.poorInFirst,
+        from,
       },
     }))
   }
@@ -134,8 +144,8 @@ export const MergedCanvas = () => {
         className="border-2 border-black"
       ></canvas>
 
-      <div className="mt-4">
-        <div className="mt-4">
+      <div className="mt-2">
+        <div className="mt-2">
           <p>ボールカウント</p>
           {ballCountOptions.map((option) => (
             <button
@@ -147,7 +157,7 @@ export const MergedCanvas = () => {
             </button>
           ))}
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <p>1打席ごとの結果（真ん中）</p>
           <button
             className="mr-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
@@ -186,7 +196,7 @@ export const MergedCanvas = () => {
             得点（自責点なし）
           </button>
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <p>安打</p>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
@@ -225,7 +235,7 @@ export const MergedCanvas = () => {
             内野安打
           </button>
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           {Array.from({ length: 9 }, (_, i) => (
             <button
               key={i}
@@ -238,7 +248,7 @@ export const MergedCanvas = () => {
             </button>
           ))}
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
             onClick={() => handleHitHowFieldClick('front')}
@@ -270,21 +280,36 @@ export const MergedCanvas = () => {
             右中間
           </button>
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <p>一塁凡退</p>
-          {/* {Array.from({ length: 9 }, (_, i) => (
+          <span className="mr-2">from</span>
+          {Array.from({ length: 9 }, (_, i) => (
             <button
               key={i}
               className="mr-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
               onClick={() =>
-                handleButtonClick('PoorInFirst', (i + 1).toString() as Position)
+                handlePoorFromPositionClick((i + 1).toString() as Position)
               }
             >
               {i + 1}
             </button>
-          ))} */}
+          ))}
+          <div className="mt-2">
+            <span className="mr-2">to</span>
+            {Array.from({ length: 9 }, (_, i) => (
+              <button
+                key={i}
+                className="mr-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+                onClick={() =>
+                  handlePoorFromPositionClick((i + 1).toString() as Position)
+                }
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <button
             className="mr-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
             onClick={saveCanvasAsImage}
