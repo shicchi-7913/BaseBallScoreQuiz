@@ -6,8 +6,6 @@ export const drawPoorInFirst = (
 ) => {
   ctx.font = '20px Arial'
 
-  console.log(poorInFirst)
-
   if (poorInFirst.to !== null && poorInFirst.from === null) {
     ctx.fillText(poorInFirst.to, 155, 145)
   }
@@ -16,5 +14,16 @@ export const drawPoorInFirst = (
   }
   if (poorInFirst.to !== null && poorInFirst.from !== null) {
     ctx.fillText(`${poorInFirst.from}-${poorInFirst.to}`, 150, 145)
+  }
+  if (poorInFirst.field === 'fly') {
+    ctx.beginPath()
+    ctx.arc(160, 130, 10, Math.PI, Math.PI * 2)
+    ctx.stroke()
+  }
+  if (poorInFirst.field === 'liner') {
+    ctx.beginPath()
+    ctx.moveTo(151, 125)
+    ctx.lineTo(170, 125)
+    ctx.stroke()
   }
 }

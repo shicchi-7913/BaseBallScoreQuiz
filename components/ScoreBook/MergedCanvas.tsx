@@ -103,6 +103,16 @@ export const MergedCanvas = () => {
     }))
   }
 
+  const handlePoorAtFieldClick = (field: Field) => {
+    setContent((prev) => ({
+      ...prev,
+      poorInFirst: {
+        ...prev.poorInFirst,
+        field,
+      },
+    }))
+  }
+
   const resetColor = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = 'black'
     ctx.strokeStyle = 'black'
@@ -317,6 +327,20 @@ export const MergedCanvas = () => {
                 {i + 1}
               </button>
             ))}
+          </div>
+          <div className="mt-2">
+            <button
+              className="mr-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+              onClick={() => handlePoorAtFieldClick('fly')}
+            >
+              フライ
+            </button>
+            <button
+              className="mr-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+              onClick={() => handlePoorAtFieldClick('liner')}
+            >
+              ライナー
+            </button>
           </div>
         </div>
         <div className="mt-2">

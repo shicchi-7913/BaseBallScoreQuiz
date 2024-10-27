@@ -42,6 +42,7 @@ export type Field =
   | 'over'
   | 'front'
   | 'fly'
+  | 'liner'
   | null
 
 export type HitInFirst = { position: Position; field: Field }
