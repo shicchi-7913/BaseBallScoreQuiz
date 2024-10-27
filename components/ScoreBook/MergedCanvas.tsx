@@ -1,41 +1,44 @@
 'use client'
 
+import { useRef, useState, useEffect, useMemo } from 'react'
+
 import {
   BallCount,
   AtBatResult,
   TotalBases,
-  InputType,
   HitInFirst,
   Position,
   Field,
   PoorInFirst,
 } from '@/types/ScoreBook'
-import { useRef, useState, useEffect } from 'react'
 import { drawScoreBookCell } from '@/components/ScoreBook/functions/ScoreBookCell'
-import { drawBallCount } from '@/components/ScoreBook/functions/BallCount'
+import {
+  drawBallCount,
+  ballCountOptions,
+} from '@/components/ScoreBook/functions/BallCount'
 import { drawTotalBases } from '@/components/ScoreBook/functions/TotalBases'
 import { drawAtBatResult } from '@/components/ScoreBook/functions/AtBatResult'
-import {
-  drawHitInFirst,
-  isIncludedPosition,
-} from '@/components/ScoreBook/functions/HitInFirst'
+import { drawHitInFirst } from '@/components/ScoreBook/functions/HitInFirst'
 import { drawPoorInFirst } from '@/components/ScoreBook/functions/PoorInFirst'
 
 export const MergedCanvas = () => {
-  const initState = {
-    ballCount: [] as BallCount[],
-    atBatResult: null as AtBatResult,
-    totalBases: null as TotalBases,
-    first: {
-      position: null as Position,
-      field: null as Field,
-    } as HitInFirst,
-    poorInFirst: {
-      to: null,
-      from: null,
-      field: null as Field,
-    } as PoorInFirst,
-  }
+  const initState = useMemo(
+    () => ({
+      ballCount: [] as BallCount[],
+      atBatResult: null as AtBatResult,
+      totalBases: null as TotalBases,
+      first: {
+        position: null as Position,
+        field: null as Field,
+      } as HitInFirst,
+      poorInFirst: {
+        to: null,
+        from: null,
+        field: null as Field,
+      } as PoorInFirst,
+    }),
+    []
+  )
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [content, setContent] = useState(initState)
 
@@ -83,10 +86,6 @@ export const MergedCanvas = () => {
   const resetColor = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = 'black'
     ctx.strokeStyle = 'black'
-  }
-
-  const resetScore = () => {
-    setContent(initState)
   }
 
   const saveCanvasAsImage = () => {
@@ -138,42 +137,15 @@ export const MergedCanvas = () => {
       <div className="mt-4">
         <div className="mt-4">
           <p>ボールカウント</p>
-          <button
-            className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleBallCountClick('calledStrike')}
-          >
-            見逃しストライク
-          </button>
-          <button
-            className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleBallCountClick('swingingStrike')}
-          >
-            空振りストライク
-          </button>
-          <button
-            className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleBallCountClick('ball')}
-          >
-            ボール
-          </button>
-          <button
-            className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleBallCountClick('foulBall')}
-          >
-            ファウル
-          </button>
-          <button
-            className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleBallCountClick('buntFoul')}
-          >
-            バントファウル
-          </button>
-          <button
-            className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleBallCountClick('buntMiss')}
-          >
-            バント空振り
-          </button>
+          {ballCountOptions.map((option) => (
+            <button
+              key={option.value}
+              className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+              onClick={() => handleBallCountClick(option.value)}
+            >
+              {option.label}
+            </button>
+          ))}
         </div>
         <div className="mt-4">
           <p>1打席ごとの結果（真ん中）</p>
@@ -321,7 +293,7 @@ export const MergedCanvas = () => {
           </button>
           <button
             className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
-            onClick={() => resetScore()}
+            onClick={() => setContent(initState)}
           >
             リセット
           </button>

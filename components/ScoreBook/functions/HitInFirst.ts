@@ -1,9 +1,5 @@
 import { HitInFirst } from '@/types/ScoreBook'
 
-export const isIncludedPosition = (value: string) => {
-  return ['1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(value)
-}
-
 export const drawHitInFirst = (
   ctx: CanvasRenderingContext2D,
   hitInFirst: HitInFirst

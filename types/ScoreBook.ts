@@ -46,13 +46,6 @@ export type Field =
 
 export type HitInFirst = { position: Position; field: Field }
 
-export type InputType =
-  | 'BallCount'
-  | 'AtBatResult'
-  | 'TotalBases'
-  | 'HitInFirst'
-  | 'PoorInFirst'
-
 export type PoorInFirst = {
   to: Position
   from: Position
