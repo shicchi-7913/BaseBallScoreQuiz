@@ -60,3 +60,12 @@ export const drawBallCount = (
     }
   })
 }
+
+export const ballCountOptions: { label: string; value: BallCount }[] = [
+  { label: '見逃しストライク', value: 'calledStrike' },
+  { label: '空振りストライク', value: 'swingingStrike' },
+  { label: 'ボール', value: 'ball' },
+  { label: 'ファウル', value: 'foulBall' },
+  { label: 'バントファウル', value: 'buntFoul' },
+  { label: 'バント空振り', value: 'buntMiss' },
+]

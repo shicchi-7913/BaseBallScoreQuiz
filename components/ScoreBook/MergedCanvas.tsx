@@ -39,17 +39,19 @@ export const MergedCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [content, setContent] = useState(initState)
 
+  const handleBallCountClick = (value: BallCount) => {
+    setContent((prev) => ({
+      ...prev,
+      ballCount: [...prev.ballCount, value],
+    }))
+  }
+
   const handleButtonClick = (
     section: InputType,
     value: BallCount | AtBatResult | TotalBases | Position | Field
   ) => {
     setContent((prev) => {
-      if (section === 'BallCount') {
-        return {
-          ...prev,
-          ballCount: [...prev.ballCount, value as BallCount],
-        }
-      } else if (section === 'AtBatResult') {
+      if (section === 'AtBatResult') {
         return {
           ...prev,
           atBatResult: value as AtBatResult,
@@ -141,37 +143,37 @@ export const MergedCanvas = () => {
           <p>ボールカウント</p>
           <button
             className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleButtonClick('BallCount', 'calledStrike')}
+            onClick={() => handleBallCountClick('calledStrike')}
           >
             見逃しストライク
           </button>
           <button
             className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleButtonClick('BallCount', 'swingingStrike')}
+            onClick={() => handleBallCountClick('swingingStrike')}
           >
             空振りストライク
           </button>
           <button
             className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleButtonClick('BallCount', 'ball')}
+            onClick={() => handleBallCountClick('ball')}
           >
             ボール
           </button>
           <button
             className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleButtonClick('BallCount', 'foulBall')}
+            onClick={() => handleBallCountClick('foulBall')}
           >
             ファウル
           </button>
           <button
             className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleButtonClick('BallCount', 'buntFoul')}
+            onClick={() => handleBallCountClick('buntFoul')}
           >
             バントファウル
           </button>
           <button
             className="mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
-            onClick={() => handleButtonClick('BallCount', 'buntMiss')}
+            onClick={() => handleBallCountClick('buntMiss')}
           >
             バント空振り
           </button>
