@@ -60,29 +60,24 @@ export const MergedCanvas = () => {
     }))
   }
 
-  const handleButtonClick = (
-    section: InputType,
-    value: BallCount | AtBatResult | TotalBases | Position | Field
-  ) => {
-    setContent((prev) => {
-      if (isIncludedPosition(value as string)) {
-        return {
-          ...prev,
-          first: {
-            ...prev.first,
-            position: value as Position,
-          },
-        }
-      } else {
-        return {
-          ...prev,
-          first: {
-            ...prev.first,
-            field: value as Field,
-          },
-        }
-      }
-    })
+  const handleHitAtPositionClick = (value: Position) => {
+    setContent((prev) => ({
+      ...prev,
+      first: {
+        ...prev.first,
+        position: value as Position,
+      },
+    }))
+  }
+
+  const handleHitHowFieldClick = (value: Field) => {
+    setContent((prev) => ({
+      ...prev,
+      first: {
+        ...prev.first,
+        field: value as Field,
+      },
+    }))
   }
 
   const resetColor = (ctx: CanvasRenderingContext2D) => {
@@ -264,7 +259,7 @@ export const MergedCanvas = () => {
               key={i}
               className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
               onClick={() =>
-                handleButtonClick('HitInFirst', (i + 1).toString() as Position)
+                handleHitAtPositionClick((i + 1).toString() as Position)
               }
             >
               {i + 1}
@@ -274,38 +269,38 @@ export const MergedCanvas = () => {
         <div className="mt-4">
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'front')}
+            onClick={() => handleHitHowFieldClick('front')}
           >
             前
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'over')}
+            onClick={() => handleHitHowFieldClick('over')}
           >
             オーバー
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'fly')}
+            onClick={() => handleHitHowFieldClick('fly')}
           >
             オーバー（フライ）
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'leftOfCenter')}
+            onClick={() => handleHitHowFieldClick('leftOfCenter')}
           >
             左中間
           </button>
           <button
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={() => handleButtonClick('HitInFirst', 'rightOfCenter')}
+            onClick={() => handleHitHowFieldClick('rightOfCenter')}
           >
             右中間
           </button>
         </div>
         <div className="mt-4">
           <p>一塁凡退</p>
-          {Array.from({ length: 9 }, (_, i) => (
+          {/* {Array.from({ length: 9 }, (_, i) => (
             <button
               key={i}
               className="mr-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
@@ -315,7 +310,7 @@ export const MergedCanvas = () => {
             >
               {i + 1}
             </button>
-          ))}
+          ))} */}
         </div>
         <div className="mt-4">
           <button
