@@ -93,6 +93,16 @@ export const MergedCanvas = () => {
     }))
   }
 
+  const handlePoorToPositionClick = (to: Position) => {
+    setContent((prev) => ({
+      ...prev,
+      poorInFirst: {
+        ...prev.poorInFirst,
+        to,
+      },
+    }))
+  }
+
   const resetColor = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = 'black'
     ctx.strokeStyle = 'black'
@@ -301,7 +311,7 @@ export const MergedCanvas = () => {
                 key={i}
                 className="mr-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
                 onClick={() =>
-                  handlePoorFromPositionClick((i + 1).toString() as Position)
+                  handlePoorToPositionClick((i + 1).toString() as Position)
                 }
               >
                 {i + 1}
