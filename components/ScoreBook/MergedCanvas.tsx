@@ -46,17 +46,19 @@ export const MergedCanvas = () => {
     }))
   }
 
+  const handleAtBatResultClick = (value: AtBatResult) => {
+    setContent((prev) => ({
+      ...prev,
+      atBatResult: value,
+    }))
+  }
+
   const handleButtonClick = (
     section: InputType,
     value: BallCount | AtBatResult | TotalBases | Position | Field
   ) => {
     setContent((prev) => {
-      if (section === 'AtBatResult') {
-        return {
-          ...prev,
-          atBatResult: value as AtBatResult,
-        }
-      } else if (section === 'TotalBases') {
+      if (section === 'TotalBases') {
         return {
           ...prev,
           totalBases: value as TotalBases,
@@ -182,39 +184,37 @@ export const MergedCanvas = () => {
           <p>1打席ごとの結果（真ん中）</p>
           <button
             className="mr-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-            onClick={() => handleButtonClick('AtBatResult', 'leftOnBase')}
+            onClick={() => handleAtBatResultClick('leftOnBase')}
           >
             残塁
           </button>
           <button
             className="mr-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-            onClick={() => handleButtonClick('AtBatResult', 'oneOut')}
+            onClick={() => handleAtBatResultClick('oneOut')}
           >
             ワンアウト
           </button>
           <button
             className="mr-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-            onClick={() => handleButtonClick('AtBatResult', 'twoOut')}
+            onClick={() => handleAtBatResultClick('twoOut')}
           >
             ツーアウト
           </button>
           <button
             className="mr-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-            onClick={() => handleButtonClick('AtBatResult', 'threeOut')}
+            onClick={() => handleAtBatResultClick('threeOut')}
           >
             スリーアウト
           </button>
           <button
             className="mr-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-            onClick={() =>
-              handleButtonClick('AtBatResult', 'scoreWithEarnedRun')
-            }
+            onClick={() => handleAtBatResultClick('scoreWithEarnedRun')}
           >
             得点（自責点あり）
           </button>
           <button
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-            onClick={() => handleButtonClick('AtBatResult', 'score')}
+            onClick={() => handleAtBatResultClick('score')}
           >
             得点（自責点なし）
           </button>
